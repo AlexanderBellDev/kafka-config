@@ -5,7 +5,7 @@ services:
     image: confluentinc/cp-zookeeper:5.5.3
     container_name: zookeeper
     ports:
-      - 2181:2181
+      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -15,8 +15,7 @@ services:
     hostname: kafka1
     container_name: kafka1
     depends_on:
-      zookeeper:
-        condition: service_started
+      - zookeeper
     ports:
       - "19092:19092"
     environment:
@@ -39,10 +38,8 @@ services:
     image: confluentinc/cp-schema-registry:5.5.3
     restart: always
     depends_on:
-      zookeeper:
-        condition: service_started
-      kafka1:
-        condition: service_started
+      - zookeeper
+      - kafka1
     environment:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
@@ -50,7 +47,7 @@ services:
       SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8087"
       SCHEMA_REGISTRY_AVRO_COMPATIBILITY_LEVEL: none
     ports:
-      - 8087:8087
+      - "8087:8087"
 
 networks:
   default:
